@@ -1,0 +1,31 @@
+# .NET Core / Blazor
+bin/
+obj/
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.pdb
+*.cache
+*.vs/
+.vscode/
+*.db
+
+# Dependency directories
+/packages/
+/node_modules/
+
+# IDE-specific
+.idea/
+*.swp
+
+# Environment variables
+appsettings.*.json
+*.env
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
