@@ -31,13 +31,14 @@ public class GamesClient
     ];
 
     private readonly Genre[] genres = new GenresClient().GetGenres();
-    public GameSummary[] GetGames() => [.. games];
     
+    public GameSummary[] GetGames() => [.. games];
+
     public void AddGame(GameDetails game)
     {
         ArgumentNullException.ThrowIfNull(game);
         var genre = genres.Single(genre => genre.Id == game.GenreId);
-        
+
         var gameSummary = new GameSummary
         {
             Id = games.Count + 1,
@@ -46,7 +47,27 @@ public class GamesClient
             Price = game.Price,
             ReleaseDate = game.ReleaseDate
         };
-        
+
         games.Add(gameSummary);
+    }
+
+    public GameDetails GetGame(int id)
+    {
+        var game = games.Find(game => game.Id == id);
+        ArgumentNullException.ThrowIfNull(game);
+
+        var genre = genres.Single(genre => string.Equals(
+            genre.Name,
+            game.Genre,
+            StringComparison.OrdinalIgnoreCase));
+
+        return new GameDetails
+        {
+            Id = game.Id,
+            Name = game.Name,
+            GenreId = genre.Id,
+            Price = game.Price,
+            ReleaseDate = game.ReleaseDate
+        };
     }
 }
