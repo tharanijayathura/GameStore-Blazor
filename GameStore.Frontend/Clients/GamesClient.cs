@@ -1,5 +1,6 @@
 using System;
 using GameStore.Frontend.Models;
+using Microsoft.VisualBasic;
 
 namespace GameStore.Frontend.Clients;
 
@@ -79,6 +80,12 @@ public class GamesClient
         existingGame.Genre = genre.Name;
         existingGame.Price = updatedGame.Price;
         existingGame.ReleaseDate = updatedGame.ReleaseDate;
+    }
+
+    public void DeleteGame(int id)
+    {
+        var game = GetGameSummarById(id);
+        games.Remove(game);
     }
 
     private GameSummary GetGameSummarById(int id)
