@@ -7,86 +7,114 @@
 @inject GamesClient GamesClient
 @inject GenresClient GenresClient
 
+<PageTitle>@title - GameStore</PageTitle>
 
-<PageTitle>@title</PageTitle>
-<h3>@title</h3>
-@if (genres is null || game is null)
-{
-    <p><em>Loading...</em></p>
-}
-else 
-{
-<div class="row">
-      <div class="col-md-4">
-            <EditForm Model="@game" FormName = "editGame" OnValidSubmit="HandleSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-              <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <InputText id="name" @bind-Value="game.Name"  class="form-control"  />   
-                <ValidationMessage For="@(() => game.Name)" />
-              </div>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-transparent py-3 border-bottom">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-controller text-primary me-2 fs-4"></i>
+                    <h4 class="card-title mb-0 fw-bold">@title</h4>
+                </div>
+            </div>
+            
+            <div class="card-body p-4">
+                @if (genres is null || game is null)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Loading game details...</p>
+                    </div>
+                }
+                else 
+                {
+                    <EditForm Model="@game" FormName="editGame" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label fw-semibold">Game Name</label>
+                                <InputText id="name" @bind-Value="game.Name" class="form-control form-control-lg" />
+                                <ValidationMessage For="@(() => game.Name)" class="text-danger small" />
+                            </div>
 
-                <div class="mb-3">
-                <label for="genre" class="form-label">Genre:</label>
-                <InputSelect id="genre" @bind-Value="game.GenreId"  class="form-select">  
+                            <div class="col-md-6 mb-3">
+                                <label for="genre" class="form-label fw-semibold">Genre</label>
+                                <InputSelect id="genre" @bind-Value="game.GenreId" class="form-select form-select-lg">
+                                    <option value="">-- Select Genre --</option>
+                                    @foreach (var genre in genres)
+                                    {
+                                        <option value="@genre.Id">@genre.Name</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => game.GenreId)" class="text-danger small" />
+                            </div>
+                        </div>
 
-                       <option value="">-- Select Genre --</option>
-                       @foreach (var genre in genres)
-                       {
-                           <option value="@genre.Id">@genre.Name</option>
-                       }
-                </InputSelect> 
-                <ValidationMessage For="@(() => game.GenreId)" />
-              </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label fw-semibold">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <InputNumber id="price" @bind-Value="game.Price" 
+                                                 class="form-control form-control-lg" />
+                                </div>
+                                <ValidationMessage For="@(() => game.Price)" class="text-danger small" />
+                            </div>
 
-                <div class="mb-3">
-                <label for="price" class="form-label">Price:</label>
-                <InputNumber id="price" @bind-Value="game.Price"  class="form-control"  />  
-                <ValidationMessage For="@(() => game.Price)" /> 
-              </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="releaseDate" class="form-label fw-semibold">Release Date</label>
+                                <InputDate id="releaseDate" @bind-Value="game.ReleaseDate" 
+                                           class="form-control form-control-lg" />
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                <label for="releaseDate" class="form-label">Release Date:</label>
-                <InputDate id="releaseDate" @bind-Value="game.ReleaseDate"  class="form-control" /> 
-                  
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-              <a role ="button" class="btn btn-secondary ms-2" href="/">Cancel</a>
-
-            </EditForm>
-     </div>
+                        <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>@(Id is null ? "Create Game" : "Update Game")
+                            </button>
+                            <a role="button" class="btn btn-outline-secondary btn-lg px-4" href="/home">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </EditForm>
+                }
+            </div>
+        </div>
+    </div>
 </div>
-}
+
 @code {
     [Parameter]
-    public int? Id {get; set;}
+    public int? Id { get; set; }
 
     [SupplyParameterFromForm]
-    private GameDetails? game {get; set;}
+    private GameDetails? game { get; set; }
     private Genre[]? genres;
 
     private string title = string.Empty;
 
     protected override void OnParametersSet()
     {
-        if (game is not null)
-        {
-            return;
-        }
+        if (game is not null) return;
+        
         if (Id is not null)
         {
-          game = GamesClient.GetGame(Id.Value);
-          title = $"Edit {game.Name}";
+            game = GamesClient.GetGame(Id.Value);
+            title = $"Edit {game.Name}";
         }
         else
         {
-          game = new()
-          {
-              Name = string.Empty,
-              ReleaseDate = DateOnly.FromDateTime(DateTime.Now)
-          };
-          title = "New Game";
+            game = new()
+            {
+                Name = string.Empty,
+                ReleaseDate = DateOnly.FromDateTime(DateTime.Now)
+            };
+            title = "Add New Game";
         }
     }
 
@@ -97,20 +125,18 @@ else
 
     private void HandleSubmit()
     {
-      ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(game);
 
-      if (Id is null)
-      {
-        GamesClient.AddGame(game); 
-
-      }
-      else
-      {
-        game.Id = Id.Value;
-        GamesClient.UpdateGame(game);
-      }
+        if (Id is null)
+        {
+            GamesClient.AddGame(game); 
+        }
+        else
+        {
+            game.Id = Id.Value;
+            GamesClient.UpdateGame(game);
+        }
       
-      NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/home");
     }
-
 }

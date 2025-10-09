@@ -1,0 +1,86 @@
+@page "/"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>GameStore - Welcome to Your Gaming Universe</PageTitle>
+
+<div class="landing-page">
+    <!-- Animated Background -->
+    <div class="animated-background">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-8 text-center">
+                <!-- Animated Logo -->
+                <div class="logo-container mb-5">
+                    <div class="game-icon animated-logo">
+                        <i class="bi bi-controller"></i>
+                    </div>
+                    <h1 class="display-3 fw-bold text-white mb-3 animated-title">
+                        Game<span class="text-primary">Store</span>
+                    </h1>
+                    <p class="lead text-light mb-4 animated-subtitle">
+                        Discover, Manage, and Explore Your Gaming Collection
+                    </p>
+                </div>
+
+                <!-- Animated Features -->
+                <div class="features-container mb-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-collection"></i>
+                            </div>
+                            <h5 class="text-white">Game Catalog</h5>
+                            <p class="text-light opacity-75">Organize your entire collection</p>
+                        </div>
+                        <div class="col-md-4 feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-tags"></i>
+                            </div>
+                            <h5 class="text-white">Smart Categories</h5>
+                            <p class="text-light opacity-75">Sort by genre and price</p>
+                        </div>
+                        <div class="col-md-4 feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-plus-circle"></i>
+                            </div>
+                            <h5 class="text-white">Easy Management</h5>
+                            <p class="text-light opacity-75">Add and edit games effortlessly</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Animated CTA Button -->
+                <div class="cta-container">
+                    <button @onclick="EnterStore" class="btn btn-primary btn-lg cta-button animated-cta">
+                        <span class="cta-text">Enter Game Store</span>
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                    <p class="text-light opacity-50 mt-3">
+                        Start exploring your gaming universe
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private async Task EnterStore()
+    {
+        // Add a small delay for smooth transition
+        await Task.Delay(300);
+        
+        // Force load to ensure navigation works
+        NavigationManager.NavigateTo("/home", forceLoad: true);
+    }
+}
