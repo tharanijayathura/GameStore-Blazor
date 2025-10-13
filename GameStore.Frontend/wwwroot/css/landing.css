@@ -15,14 +15,14 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Enhanced Animated Background */
+/* Enhanced Animated Background - Moved behind content */
 .animated-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 1; /* Behind content */
 }
 
 .floating-shapes {
@@ -37,13 +37,15 @@
     background: rgba(255, 255, 255, 0.1);
     animation: float 6s ease-in-out infinite;
     backdrop-filter: blur(10px);
+    z-index: 1; /* Ensure shapes stay behind content */
 }
 
+/* Adjust shape positions to avoid covering text */
 .shape-1 {
     width: 120px;
     height: 120px;
-    top: 10%;
-    left: 10%;
+    top: 15%;
+    left: 5%; /* Moved more to left */
     animation-delay: 0s;
     background: rgba(13, 110, 253, 0.2);
 }
@@ -51,8 +53,8 @@
 .shape-2 {
     width: 180px;
     height: 180px;
-    top: 60%;
-    left: 80%;
+    top: 65%;
+    left: 85%; /* Moved more to right */
     animation-delay: 2s;
     background: rgba(102, 16, 242, 0.2);
 }
@@ -60,8 +62,8 @@
 .shape-3 {
     width: 100px;
     height: 100px;
-    top: 80%;
-    left: 20%;
+    top: 85%;
+    left: 15%; /* Moved more to left */
     animation-delay: 4s;
     background: rgba(255, 255, 255, 0.15);
 }
@@ -69,8 +71,8 @@
 .shape-4 {
     width: 150px;
     height: 150px;
-    top: 20%;
-    left: 70%;
+    top: 25%;
+    left: 75%; /* Moved more to right */
     animation-delay: 1s;
     background: rgba(13, 110, 253, 0.25);
 }
@@ -87,10 +89,10 @@
     }
 }
 
-/* Enhanced Logo Animation */
+/* Enhanced Logo Animation - Ensure it's above shapes */
 .logo-container {
     position: relative;
-    z-index: 2;
+    z-index: 3; /* Above shapes */
     margin-bottom: 3rem;
 }
 
@@ -101,6 +103,8 @@
     display: inline-block;
     margin-bottom: 1.5rem;
     filter: drop-shadow(0 0 20px rgba(13, 110, 253, 0.6));
+    position: relative;
+    z-index: 4; /* Above everything */
 }
 
 @keyframes pulse {
@@ -131,6 +135,8 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 1rem;
+    position: relative;
+    z-index: 3; /* Above shapes */
 }
 
 .animated-subtitle {
@@ -138,6 +144,8 @@
     font-size: 1.4rem;
     font-weight: 300;
     opacity: 0.9;
+    position: relative;
+    z-index: 3; /* Above shapes */
 }
 
 @keyframes slideInDown {
@@ -165,6 +173,8 @@
 /* Enhanced Features Animation */
 .features-container {
     margin: 4rem 0;
+    position: relative;
+    z-index: 3; /* Above shapes */
 }
 
 .feature-item {
@@ -177,6 +187,8 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
     margin: 0 0.5rem;
+    position: relative;
+    z-index: 3; /* Above shapes */
 }
 
 .feature-item:hover {
@@ -213,6 +225,8 @@
     color: white;
     transition: all 0.3s ease;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 4; /* Above everything */
 }
 
 .feature-item:hover .feature-icon {
@@ -225,19 +239,57 @@
     font-weight: 600;
     margin-bottom: 1rem;
     color: white;
+    position: relative;
+    z-index: 3;
 }
 
 .feature-item p {
     color: rgba(255, 255, 255, 0.8);
     font-size: 0.95rem;
     line-height: 1.5;
+    position: relative;
+    z-index: 3;
+}
+
+/* Statistics Section */
+.stats-container {
+    margin-top: 4rem;
+    position: relative;
+    z-index: 3; /* Above shapes */
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 3;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    line-height: 1;
+    position: relative;
+    z-index: 3;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    font-weight: 500;
+    position: relative;
+    z-index: 3;
 }
 
 /* Enhanced CTA Button Animation */
 .cta-container {
     position: relative;
-    z-index: 2;
-    margin-top: 3rem;
+    z-index: 3; /* Above shapes */
 }
 
 .cta-button {
@@ -252,6 +304,7 @@
     transition: all 0.4s ease;
     animation: bounce 3s ease-in-out infinite;
     box-shadow: 0 10px 30px rgba(13, 110, 253, 0.4);
+    z-index: 4; /* Above everything */
 }
 
 .cta-button::before {
@@ -263,6 +316,7 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     transition: left 0.7s;
+    z-index: -1;
 }
 
 .cta-button:hover::before {
@@ -292,31 +346,20 @@
     }
 }
 
-/* Stats Section */
-.stats-container {
-    margin-top: 4rem;
+/* Ensure all content containers are above shapes */
+.container {
+    position: relative;
+    z-index: 2; /* Above background shapes */
 }
 
-.stat-item {
-    text-align: center;
-    padding: 1.5rem;
+.row {
+    position: relative;
+    z-index: 2;
 }
 
-.stat-number {
-    font-size: 3rem;
-    font-weight: 800;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: block;
-    line-height: 1;
-}
-
-.stat-label {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
-    font-weight: 500;
+.col-lg-10 {
+    position: relative;
+    z-index: 2;
 }
 
 /* Responsive Design */
@@ -347,6 +390,35 @@
     .stat-number {
         font-size: 2.5rem;
     }
+    
+    /* Adjust shapes for mobile to avoid text */
+    .shape-1 {
+        top: 5%;
+        left: 2%;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .shape-2 {
+        top: 70%;
+        left: 90%;
+        width: 120px;
+        height: 120px;
+    }
+    
+    .shape-3 {
+        top: 90%;
+        left: 5%;
+        width: 70px;
+        height: 70px;
+    }
+    
+    .shape-4 {
+        top: 15%;
+        left: 80%;
+        width: 100px;
+        height: 100px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -360,5 +432,10 @@
     
     .animated-subtitle {
         font-size: 1.1rem;
+    }
+    
+    /* Further adjust shapes for very small screens */
+    .shape {
+        opacity: 0.7; /* Make shapes more transparent on small screens */
     }
 }
