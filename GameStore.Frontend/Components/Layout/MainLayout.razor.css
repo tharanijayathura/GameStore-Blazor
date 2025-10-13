@@ -1,16 +1,46 @@
 .app-container {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .main-content {
     flex: 1;
-    padding: 2rem 0;
+    padding: 0;
 }
 
 /* Modern dark theme support */
 [data-bs-theme="dark"] .app-container {
-    background-color: #1a1a1a;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     color: #ffffff;
+}
+
+[data-bs-theme="dark"] .main-content {
+    background: transparent;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-gradient);
 }

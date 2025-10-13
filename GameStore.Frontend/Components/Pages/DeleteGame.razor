@@ -4,34 +4,64 @@
 
 <div class="modal fade" id="@GetModelId(Game)" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
+        <div class="modal-content border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
                 <div class="modal-icon bg-danger bg-opacity-10 rounded-circle p-3 me-3">
-                    <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
+                    <i class="bi bi-exclamation-triangle-fill text-danger fs-3"></i>
                 </div>
-                <div>
-                    <h5 class="modal-title fw-bold" id="deleteModalLabel">Confirm Deletion</h5>
+                <div class="flex-grow-1">
+                    <h5 class="modal-title fw-bold text-dark" id="deleteModalLabel">Confirm Deletion</h5>
                     <p class="text-muted mb-0">This action cannot be undone</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
             <div class="modal-body py-4">
-                <p>Are you sure you want to delete <strong class="text-danger">@Game?.Name</strong>?</p>
-                <div class="alert alert-warning mt-3">
-                    <i class="bi bi-info-circle me-2"></i>
-                    This will permanently remove the game from your catalog.
+                <div class="alert alert-warning border-warning">
+                    <div class="d-flex">
+                        <i class="bi bi-info-circle-fill text-warning me-2 fs-5"></i>
+                        <div>
+                            <h6 class="alert-heading fw-semibold mb-1">Warning: Permanent Action</h6>
+                            <p class="mb-0">You are about to permanently delete this game from your catalog.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card bg-light border-0 mt-3">
+                    <div class="card-body">
+                        <h6 class="fw-semibold mb-3">Game Details:</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Name:</small>
+                                <p class="fw-semibold text-danger mb-2">@Game?.Name</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Genre:</small>
+                                <p class="mb-2">
+                                    <span class="badge bg-secondary">@Game?.Genre</span>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Price:</small>
+                                <p class="fw-semibold text-success mb-2">@Game?.Price.ToString("C")</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Release Date:</small>
+                                <p class="mb-0">@Game?.ReleaseDate.ToString("MMM dd, yyyy")</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary px-4 d-flex align-items-center" data-bs-dismiss="modal">
                     <i class="bi bi-x-circle me-2"></i>Cancel
                 </button>
                 <button type="button" 
-                        class="btn btn-danger" 
+                        class="btn btn-danger px-4 d-flex align-items-center" 
                         data-bs-dismiss="modal" 
-                        @onclick="@Confirm">
+                        @onclick="Confirm">
                     <i class="bi bi-trash me-2"></i>Delete Game
                 </button>
             </div>
@@ -51,7 +81,10 @@
 
     private void Confirm()
     {
-        Client.DeleteGame(Game!.Id);
-        NavigationManager.Refresh();
+        if (Game is not null)
+        {
+            Client.DeleteGame(Game.Id);
+            NavigationManager.Refresh();
+        }
     }
 }
