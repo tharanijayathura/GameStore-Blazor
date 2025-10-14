@@ -16,7 +16,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center align-items-center min-vh-100">
             <div class="col-lg-10 text-center">
                 <!-- Enhanced Animated Logo -->
@@ -101,6 +101,38 @@
     {
         // Add smooth transition effect
         await Task.Delay(300);
-        NavigationManager.NavigateTo("/", forceLoad: true);
+        NavigationManager.NavigateTo("/catalog", forceLoad: true);
     }
 }
+
+<style>
+    /* Landing page background that allows scrolling */
+    .landing-page {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Ensure content takes at least full viewport height */
+    .min-vh-100 {
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    /* Make sure the background covers properly */
+    .animated-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    /* Ensure content is above background */
+    .container-fluid, .row, .col-lg-10 {
+        position: relative;
+        z-index: 2;
+    }
+</style>
