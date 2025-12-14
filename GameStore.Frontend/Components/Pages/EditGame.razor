@@ -10,151 +10,181 @@
 <PageTitle>@title - GameStore</PageTitle>
 
 <div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white py-4">
-                    <div class="d-flex align-items-center">
-                        <div class="game-icon bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                            <i class="bi bi-controller text-white fs-3"></i>
-                        </div>
-                        <div>
-                            <h4 class="card-title mb-1 fw-bold">@title</h4>
-                            <p class="mb-0 opacity-75">@(Id is null ? "Add a new game to your collection" : "Update your game details")</p>
-                        </div>
+    <div class="row g-4">
+        <div class="col-xl-4">
+            <aside class="guide-panel glass-panel h-100">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="guide-icon">
+                        <i class="bi bi-controller"></i>
+                    </div>
+                    <div>
+                        <p class="text-uppercase text-white-50 mb-1">@((Id is null) ? "New entry" : "Editing")</p>
+                        <h3 class="text-white mb-0">@title</h3>
                     </div>
                 </div>
-                
-                <div class="card-body p-4">
-                    @if (genres is null || game is null)
-                    {
-                        <div class="text-center py-5">
-                            <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <h5 class="text-muted">Loading game details...</h5>
-                            <p class="text-muted">Please wait while we prepare the form</p>
+                <p class="text-white-50 mb-4">
+                    Complete each step below. Changes save once you submit, and validation keeps data clean for analytics.
+                </p>
+                <ol class="guide-steps list-unstyled">
+                    <li>
+                        <span class="badge rounded-pill">1</span>
+                        <div>
+                            <h6 class="text-white mb-1">Identify the game</h6>
+                            <small class="text-white-50">Name + genre</small>
                         </div>
-                    }
-                    else 
-                    {
-                        <EditForm Model="@game" FormName="editGame" OnValidSubmit="HandleSubmit">
-                            <DataAnnotationsValidator />
-                            <ValidationSummary class="alert alert-danger rounded-3" />
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <label for="name" class="form-label fw-semibold text-dark">
-                                        <i class="bi bi-tag me-2 text-primary"></i>Game Name
-                                    </label>
-                                    <InputText id="name" @bind-Value="game.Name" 
-                                               class="form-control form-control-lg" 
-                                               placeholder="Enter game name" />
-                                    <ValidationMessage For="@(() => game.Name)" class="text-danger small mt-1" />
-                                    <div class="form-text">Enter the full name of the game</div>
-                                </div>
-
-                                <div class="col-md-6 mb-4">
-                                    <label for="genre" class="form-label fw-semibold text-dark">
-                                        <i class="bi bi-tags me-2 text-primary"></i>Genre
-                                    </label>
-                                    <InputSelect id="genre" @bind-Value="game.GenreId" 
-                                                 class="form-select form-select-lg">
-                                        <option value="">-- Select Genre --</option>
-                                        @foreach (var genre in genres)
-                                        {
-                                            <option value="@genre.Id">@genre.Name</option>
-                                        }
-                                    </InputSelect>
-                                    <ValidationMessage For="@(() => game.GenreId)" class="text-danger small mt-1" />
-                                    <div class="form-text">Choose the appropriate genre</div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <label for="price" class="form-label fw-semibold text-dark">
-                                        <i class="bi bi-currency-dollar me-2 text-primary"></i>Price
-                                    </label>
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text bg-light border-end-0">$</span>
-                                        <InputNumber id="price" @bind-Value="game.Price" 
-                                                     class="form-control border-start-0" 
-                                                     placeholder="0.00" />
-                                    </div>
-                                    <ValidationMessage For="@(() => game.Price)" class="text-danger small mt-1" />
-                                    <div class="form-text">Enter the price between $0 and $100</div>
-                                </div>
-
-                                <div class="col-md-6 mb-4">
-                                    <label for="releaseDate" class="form-label fw-semibold text-dark">
-                                        <i class="bi bi-calendar me-2 text-primary"></i>Release Date
-                                    </label>
-                                    <InputDate id="releaseDate" @bind-Value="game.ReleaseDate" 
-                                               class="form-control form-control-lg" />
-                                    <div class="form-text">Select the official release date</div>
-                                </div>
-                            </div>
-
-                            <!-- Preview Section -->
-                            <div class="card bg-light border-0 mb-4">
-                                <div class="card-body">
-                                    <h6 class="fw-semibold mb-3">
-                                        <i class="bi bi-eye me-2 text-primary"></i>Preview
-                                    </h6>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <small class="text-muted">Game Name:</small>
-                                            <p class="fw-semibold mb-2">@(string.IsNullOrEmpty(game.Name) ? "No name entered" : game.Name)</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <small class="text-muted">Genre:</small>
-                                            <p class="mb-2">
-                                                @if (game.GenreId > 0)
-                                                {
-                                                    <span class="badge badge-genre">
-                                                        @genres.FirstOrDefault(g => g.Id == game.GenreId)?.Name
-                                                    </span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">No genre selected</span>
-                                                }
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <small class="text-muted">Price:</small>
-                                            <p class="fw-semibold text-success mb-2">@game.Price.ToString("C")</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <small class="text-muted">Release Date:</small>
-                                            <p class="mb-0">@game.ReleaseDate.ToString("MMM dd, yyyy")</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex gap-3 mt-4 pt-3 border-top">
-                                <button type="submit" class="btn btn-primary btn-lg px-5 d-flex align-items-center">
-                                    <i class="bi bi-check-circle me-2"></i>
-                                    @(Id is null ? "Create Game" : "Update Game")
-                                </button>
-                               <a role="button" class="btn btn-outline-secondary btn-lg px-4 d-flex align-items-center" href="/catalog">
-                                    <i class="bi bi-arrow-left me-2"></i>
-                                    Back to Catalog
-                               </a>
-                                @if (Id is not null)
-                                {
-                                    <a role="button" class="btn btn-outline-danger btn-lg px-4 d-flex align-items-center ms-auto" 
-                                       href="/home">
-                                        <i class="bi bi-x-circle me-2"></i>
-                                        Cancel
-                                    </a>
-                                }
-                            </div>
-                        </EditForm>
-                    }
+                    </li>
+                    <li>
+                        <span class="badge rounded-pill">2</span>
+                        <div>
+                            <h6 class="text-white mb-1">Set pricing</h6>
+                            <small class="text-white-50">USD between 0-100</small>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="badge rounded-pill">3</span>
+                        <div>
+                            <h6 class="text-white mb-1">Confirm release</h6>
+                            <small class="text-white-50">Use official launch date</small>
+                        </div>
+                    </li>
+                </ol>
+                <div class="tip-card">
+                    <i class="bi bi-lightning-charge text-warning me-2"></i>
+                    <span>Fast tip: hit <strong>Tab</strong> to jump fields.</span>
                 </div>
+            </aside>
+        </div>
+
+        <div class="col-xl-8">
+            <div class="glass-panel">
+                @if (genres is null || game is null)
+                {
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h5 class="text-white">Preparing form…</h5>
+                        <p class="text-white-50">Fetching genres and existing data.</p>
+                    </div>
+                }
+                else 
+                {
+                    <EditForm Model="@game" FormName="editGame" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger rounded-3" />
+
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <p class="section-label mb-0">Game basics</p>
+                            </div>
+                            <div class="row g-4 mt-2">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">
+                                        <i class="bi bi-tag me-2"></i>Game name
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <InputText id="name" @bind-Value="game.Name" class="form-control form-control-lg modern-input" placeholder="e.g. Stellar Odyssey" />
+                                        <i class="bi bi-controller input-icon"></i>
+                                    </div>
+                                    <ValidationMessage For="@(() => game.Name)" class="text-warning small mt-2 d-flex align-items-center">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                    </ValidationMessage>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="genre" class="form-label">
+                                        <i class="bi bi-collection me-2"></i>Genre
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <InputSelect id="genre" @bind-Value="game.GenreId" class="form-select form-select-lg modern-input">
+                                            <option value="">Select genre</option>
+                                            @foreach (var genre in genres)
+                                            {
+                                                <option value="@genre.Id">@genre.Name</option>
+                                            }
+                                        </InputSelect>
+                                        <i class="bi bi-chevron-down input-icon"></i>
+                                    </div>
+                                    <ValidationMessage For="@(() => game.GenreId)" class="text-warning small mt-2 d-flex align-items-center">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                    </ValidationMessage>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section mt-4">
+                            <div class="section-header">
+                                <i class="bi bi-currency-dollar me-2"></i>
+                                <p class="section-label mb-0">Pricing & release</p>
+                            </div>
+                            <div class="row g-4 mt-2">
+                                <div class="col-md-6">
+                                    <label for="price" class="form-label">
+                                        <i class="bi bi-cash-stack me-2"></i>Price (USD)
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <span class="input-prefix">$</span>
+                                        <InputNumber id="price" @bind-Value="game.Price" class="form-control form-control-lg modern-input" placeholder="0.00" />
+                                        <i class="bi bi-currency-dollar input-icon"></i>
+                                    </div>
+                                    <ValidationMessage For="@(() => game.Price)" class="text-warning small mt-2 d-flex align-items-center">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                    </ValidationMessage>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="releaseDate" class="form-label">
+                                        <i class="bi bi-calendar-event me-2"></i>Release date
+                                    </label>
+                                    <div class="input-wrapper">
+                                        <InputDate id="releaseDate" @bind-Value="game.ReleaseDate" class="form-control form-control-lg modern-input" />
+                                        <i class="bi bi-calendar3 input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preview-panel mt-4">
+                            <div class="preview-header">
+                                <i class="bi bi-eye me-2"></i>
+                                <p class="text-white-50 mb-0">Live Preview</p>
+                            </div>
+                            <div class="preview-content">
+                                <h4 class="preview-title">@(string.IsNullOrWhiteSpace(game.Name) ? "Awaiting title" : game.Name)</h4>
+                                <div class="preview-badges mt-3">
+                                    <span class="badge rounded-pill genre-chip">
+                                        <i class="bi bi-tag me-1"></i>
+                                        @(genres.FirstOrDefault(g => g.Id == game.GenreId)?.Name ?? "Genre TBD")
+                                    </span>
+                                    <span class="badge rounded-pill price-badge">
+                                        <i class="bi bi-currency-dollar me-1"></i>
+                                        @game.Price.ToString("C")
+                                    </span>
+                                    <span class="badge rounded-pill date-badge">
+                                        <i class="bi bi-calendar3 me-1"></i>
+                                        @game.ReleaseDate.ToString("MMM dd, yyyy")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions mt-4 pt-3">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 d-flex align-items-center">
+                                <i class="bi bi-check-circle me-2"></i>
+                                @(Id is null ? "Create game" : "Save changes")
+                            </button>
+                            <a role="button" class="btn btn-outline-light btn-lg px-4 d-flex align-items-center" href="/catalog">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Back to catalog
+                            </a>
+                            @if (Id is not null)
+                            {
+                                <a role="button" class="btn btn-link text-white-50 ms-auto" href="/catalog">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel edit
+                                </a>
+                            }
+                        </div>
+                    </EditForm>
+                }
             </div>
         </div>
     </div>
@@ -211,6 +241,6 @@
             GamesClient.UpdateGame(game);
         }
       
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/catalog");
     }
 }

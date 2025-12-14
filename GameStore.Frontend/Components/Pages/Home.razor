@@ -3,58 +3,82 @@
 
 <PageTitle>Game Catalog - GameStore</PageTitle>
 
-<div class="container-fluid py-4">
-    <!-- Stats Overview -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card stats-card-1 text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-0">@(games?.Length ?? 0)</h4>
-                            <small>Total Games</small>
-                        </div>
-                        <i class="bi bi-controller fs-1 opacity-50"></i>
+<div class="catalog-page">
+    <div class="catalog-animated-background"></div>
+    <div class="catalog-shell container-fluid py-4">
+    <section class="catalog-hero glass-panel mb-4">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-8">
+                <span class="eyebrow-pill small text-light">Live catalog • Synced hourly</span>
+                <h1 class="display-5 fw-bold text-white mt-3">Your entire game universe, beautifully organized.</h1>
+                <p class="lead text-white-50 mb-4">
+                    Track prices, genres, and release windows with zero spreadsheets. Filter instantly, edit inline, and
+                    showcase the collection you are proud of.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a class="btn btn-primary btn-lg" href="/editgame">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Add new game
+                    </a>
+                    <button class="btn btn-outline-light btn-lg" @onclick="RefreshCatalog">
+                        <i class="bi bi-arrow-repeat me-2"></i>
+                        Refresh data
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="hero-metrics">
+                    <div>
+                        <small class="text-uppercase text-white-50">Total games</small>
+                        <p class="display-6 fw-bold text-white mb-0">@(games?.Length ?? 0)</p>
+                    </div>
+                    <div>
+                        <small class="text-uppercase text-white-50">Avg price</small>
+                        <p class="h3 fw-bold text-success mb-0">@(games?.Any() == true ? games.Average(g => g.Price).ToString("C") : "$0.00")</p>
+                    </div>
+                    <div>
+                        <small class="text-uppercase text-white-50">Oldest release</small>
+                        <p class="h4 fw-semibold text-white mb-0">@(games?.Length > 0 ? games.Min(g => g.ReleaseDate).Year : 0)</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stats-card-2 text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-0">@(games?.Select(g => g.Genre).Distinct().Count() ?? 0)</h4>
-                            <small>Genres</small>
-                        </div>
-                        <i class="bi bi-tags fs-1 opacity-50"></i>
-                    </div>
+    </section>
+
+    <div class="row g-3 stats-row mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <i class="bi bi-controller"></i>
+                <div>
+                    <p class="label">Games tracked</p>
+                    <p class="value">@(games?.Length ?? 0)</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stats-card-3 text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-0">@(games?.Any() == true ? games.Average(g => g.Price).ToString("C") : "$0.00")</h4>
-                            <small>Avg Price</small>
-                        </div>
-                        <i class="bi bi-currency-dollar fs-1 opacity-50"></i>
-                    </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <i class="bi bi-tags"></i>
+                <div>
+                    <p class="label">Genres</p>
+                    <p class="value">@(games?.Select(g => g.Genre).Distinct(StringComparer.OrdinalIgnoreCase).Count() ?? 0)</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stats-card-4 text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-0">@(games?.Length > 0 ? games.Min(g => g.ReleaseDate).Year.ToString() : "N/A")</h4>
-                            <small>Oldest Game</small>
-                        </div>
-                        <i class="bi bi-calendar fs-1 opacity-50"></i>
-                    </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <i class="bi bi-graph-up"></i>
+                <div>
+                    <p class="label">Highest price</p>
+                    <p class="value">@(games?.Any() == true ? games.Max(g => g.Price).ToString("C") : "$0.00")</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <i class="bi bi-cloud-arrow-down"></i>
+                <div>
+                    <p class="label">Last sync</p>
+                    <p class="value">@DateTime.Now.ToString("HH:mm")</p>
                 </div>
             </div>
         </div>
@@ -62,190 +86,397 @@
 
     @if (games is null)
     {
-        <!-- Enhanced Loading State -->
-        <div class="card shadow-lg">
-            <div class="card-body text-center py-5">
-                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <h5 class="text-muted">Loading your game collection...</h5>
-                <p class="text-muted">Please wait while we fetch your games</p>
+        <div class="glass-panel text-center py-5">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
+            <h5 class="text-white">Loading your game collection…</h5>
+            <p class="text-white-50 mb-0">Please wait while we fetch your data.</p>
         </div>
     }
     else if (!games.Any())
     {
-        <!-- Enhanced Empty State -->
-        <div class="card shadow-lg border-0">
-            <div class="card-body text-center py-5 empty-state">
-                <div class="game-icon bg-primary bg-opacity-10 rounded-circle p-4 mx-auto mb-4">
-                    <i class="bi bi-controller display-4 text-primary"></i>
-                </div>
-                <h3 class="text-dark mb-3">No Games Found</h3>
-                <p class="text-muted mb-4">Start building your gaming collection by adding your first game</p>
-                <a class="btn btn-primary btn-lg px-4" href="/editgame">
-                    <i class="bi bi-plus-circle me-2"></i>Add Your First Game
-                </a>
+        <div class="glass-panel text-center py-5 empty-state">
+            <div class="game-icon bg-primary bg-opacity-10 rounded-circle p-4 mx-auto mb-4">
+                <i class="bi bi-controller display-4 text-primary"></i>
             </div>
+            <h3 class="text-white mb-3">Your shelf is empty</h3>
+            <p class="text-white-50 mb-4">Add your first title to unlock stats, filters, and sharing.</p>
+            <a class="btn btn-primary btn-lg" href="/editgame">
+                <i class="bi bi-plus-circle me-2"></i>
+                Add your first game
+            </a>
         </div>
     }
     else
     {
-        <!-- Enhanced Games Table -->
-        <div class="card shadow-lg border-0 slide-in-left">
-            <div class="card-header bg-transparent py-3">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h5 class="card-title mb-0 fw-bold text-dark">
-                            <i class="bi bi-list-ul me-2 text-primary"></i>
-                            Your Game Collection
-                        </h5>
+        <section class="filters-panel glass-panel mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-4">
+                    <label class="form-label text-white-50">Search</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent text-white-50 border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control text-white bg-transparent border-start-0" placeholder="Find by title or genre" value="@searchTerm" @oninput="OnSearchInput" />
                     </div>
-                    <div class="col-auto">
-                        <div class="input-group input-group-sm" style="max-width: 300px;">
-                            <span class="input-group-text bg-light border-0">
-                                <i class="bi bi-search text-muted"></i>
-                            </span>
-                            <input type="text" class="form-control border-0 bg-light" 
-                                   placeholder="Search games..." @oninput="OnSearchInput" />
+                </div>
+                <div class="col-lg-4">
+                    <label class="form-label text-white-50">Genre</label>
+                    <select class="form-select form-select-lg bg-transparent text-white" value="@selectedGenre" @onchange="OnGenreChanged">
+                        <option value="all">All genres</option>
+                        @foreach (var genre in genreOptions)
+                        {
+                            <option value="@genre">@genre</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-4">
+                    <label class="form-label text-white-50">Sort by</label>
+                    <select class="form-select form-select-lg bg-transparent text-white" value="@sortOption" @onchange="OnSortChanged">
+                        <option value="recent">Newest release</option>
+                        <option value="oldest">Oldest release</option>
+                        <option value="priceHigh">Price: High to Low</option>
+                        <option value="priceLow">Price: Low to High</option>
+                        <option value="name">Name A-Z</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <div class="row g-4">
+            @foreach (var game in filteredGames)
+            {
+                <div class="col-xxl-4 col-lg-6">
+                    <article class="game-card glass-panel h-100">
+                        <div class="game-card-header">
+                            <div class="game-id-badge">#@game.Id</div>
+                            <span class="badge rounded-pill genre-chip">@game.Genre</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="ps-4 py-3">ID</th>
-                                <th class="py-3">Game</th>
-                                <th class="py-3">Genre</th>
-                                <th class="py-3">Price</th>
-                                <th class="py-3">Release Date</th>
-                                <th class="text-end pe-4 py-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach(var game in filteredGames)
-                            {
-                                <tr class="game-row">
-                                    <td class="ps-4 fw-bold text-muted">#@game.Id</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="game-icon bg-primary bg-opacity-10 rounded p-2 me-3">
-                                                <i class="bi bi-controller text-primary fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <div class="fw-semibold text-dark fs-6">@game.Name</div>
-                                                <small class="text-muted">Added recently</small>
-                                            </div>
+                        <div class="game-card-content">
+                            <h4 class="game-title">@game.Name</h4>
+                            <div class="game-card-body">
+                                <div class="game-info-row">
+                                    <div class="info-item">
+                                        <i class="bi bi-currency-dollar text-success"></i>
+                                        <div>
+                                            <span class="info-label">Price</span>
+                                            <span class="info-value text-success fw-bold">@game.Price.ToString("C")</span>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge genre-badge">@game.Genre</span>
-                                    </td>
-                                    <td>
-                                        <span class="fw-bold text-success fs-6">@game.Price.ToString("C")</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex flex-column">
-                                            <span class="text-dark fw-medium">@game.ReleaseDate.ToString("MMM dd, yyyy")</span>
-                                            <small class="text-muted">@GetYearsAgo(game.ReleaseDate)</small>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="bi bi-calendar-event text-primary"></i>
+                                        <div>
+                                            <span class="info-label">Release</span>
+                                            <span class="info-value">@game.ReleaseDate.ToString("MMM dd, yyyy")</span>
                                         </div>
-                                    </td>
-                                    <td class="text-end pe-4">
-                                        <div class="btn-group" role="group">
-                                            <a class="btn btn-outline-primary btn-sm d-flex align-items-center" 
-                                               href="@GameUrl(game.Id)"
-                                               title="Edit game">
-                                                <i class="bi bi-pencil me-1"></i>
-                                                <span class="d-none d-sm-inline">Edit</span>
-                                            </a>
-                                            <button class="btn btn-outline-danger btn-sm d-flex align-items-center" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="@GetDeleteModalId(game)"
-                                                    title="Delete game">
-                                                <i class="bi bi-trash me-1"></i>
-                                                <span class="d-none d-sm-inline">Delete</span>
-                                            </button>
-                                        </div>
-                                        <DeleteGame Game="@game" />
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                    </div>
+                                </div>
+                                <div class="game-meta">
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    <span>@GetYearsAgo(game.ReleaseDate)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="game-card-footer">
+                            <a class="btn btn-edit flex-grow-1" href="@GameUrl(game.Id)">
+                                <i class="bi bi-pencil me-2"></i>
+                                Edit
+                            </a>
+                            <button class="btn btn-delete flex-grow-1" data-bs-toggle="modal" data-bs-target="@GetDeleteModalId(game)">
+                                <i class="bi bi-trash me-2"></i>
+                                Delete
+                            </button>
+                        </footer>
+                        <DeleteGame Game="@game" />
+                    </article>
                 </div>
-            </div>
-            
-            <!-- Enhanced Footer -->
-            <div class="card-footer bg-transparent py-3">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <small class="text-muted">
-                            Showing @filteredGames.Length of @games.Length games
-                        </small>
-                    </div>
-                    <div class="col-auto">
-                        <small class="text-muted">
-                            Last updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")
-                        </small>
-                    </div>
-                </div>
-            </div>
+            }
+        </div>
+
+        <div class="text-white-50 mt-4 small text-end">
+            Showing @filteredGames.Length of @games.Length entries • Updated @DateTime.Now.ToString("MMM dd, yyyy HH:mm")
         </div>
     }
+    </div>
 </div>
 
 @code {
     private GameSummary[]? games;
     private GameSummary[] filteredGames = Array.Empty<GameSummary>();
+    private string[] genreOptions = Array.Empty<string>();
     private string searchTerm = string.Empty;
+    private string selectedGenre = "all";
+    private string sortOption = "recent";
 
     protected override void OnInitialized()
     {
         games = Client.GetGames();
+        BuildGenreOptions();
         filteredGames = games ?? Array.Empty<GameSummary>();
+        ApplyFilters();
     }
 
     private static string GameUrl(int id) => $"/editgame/{id}";
 
-    private string GetDeleteModalId(GameSummary game)
-    {
-        return $"#{DeleteGame.GetModelId(game)}";
-    }
+    private string GetDeleteModalId(GameSummary game) => $"#{DeleteGame.GetModelId(game)}";
 
     private string GetYearsAgo(DateOnly releaseDate)
     {
-        var years = DateTime.Now.Year - releaseDate.Year;
-        return years == 1 ? "1 year ago" : $"{years} years ago";
+        var years = Math.Max(0, DateTime.Now.Year - releaseDate.Year);
+        return years switch
+        {
+            0 => "Releasing this year",
+            1 => "1 year ago",
+            _ => $"{years} years ago"
+        };
+    }
+
+    private void RefreshCatalog()
+    {
+        games = Client.GetGames();
+        BuildGenreOptions();
+        ApplyFilters();
+        StateHasChanged();
     }
 
     private void OnSearchInput(ChangeEventArgs e)
     {
         searchTerm = e.Value?.ToString() ?? string.Empty;
-        
-        if (games is not null)
+        ApplyFilters();
+    }
+
+    private void OnGenreChanged(ChangeEventArgs e)
+    {
+        selectedGenre = e.Value?.ToString() ?? "all";
+        ApplyFilters();
+    }
+
+    private void OnSortChanged(ChangeEventArgs e)
+    {
+        sortOption = e.Value?.ToString() ?? "recent";
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        if (games is null)
         {
-            if (string.IsNullOrWhiteSpace(searchTerm))
-            {
-                filteredGames = games;
-            }
-            else
-            {
-                filteredGames = games.Where(g => 
-                    g.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                    g.Genre.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-                ).ToArray();
-            }
+            filteredGames = Array.Empty<GameSummary>();
+            return;
         }
-        
-        StateHasChanged();
+
+        IEnumerable<GameSummary> query = games;
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(g =>
+                g.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                g.Genre.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (!string.Equals(selectedGenre, "all", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(g => string.Equals(g.Genre, selectedGenre, StringComparison.OrdinalIgnoreCase));
+        }
+
+        query = sortOption switch
+        {
+            "priceHigh" => query.OrderByDescending(g => g.Price),
+            "priceLow" => query.OrderBy(g => g.Price),
+            "name" => query.OrderBy(g => g.Name),
+            "oldest" => query.OrderBy(g => g.ReleaseDate),
+            _ => query.OrderByDescending(g => g.ReleaseDate)
+        };
+
+        filteredGames = query.ToArray();
+    }
+
+    private void BuildGenreOptions()
+    {
+        genreOptions = games?
+            .Select(g => g.Genre)
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(g => g)
+            .ToArray() ?? Array.Empty<string>();
     }
 }
 
 <style>
+    .catalog-page {
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f172a 0%, #151c3c 50%, #0b1120 100%);
+        overflow-x: hidden;
+    }
+
+    .catalog-animated-background {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(99,102,241,0.35), transparent 45%),
+            radial-gradient(circle at 80% 10%, rgba(14,165,233,0.25), transparent 40%),
+            radial-gradient(circle at 70% 80%, rgba(236,72,153,0.25), transparent 45%),
+            linear-gradient(135deg, #0b1120 0%, #111827 55%, #18122b 100%);
+        opacity: 0.95;
+    }
+
+    .catalog-animated-background::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(120deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 220px 220px;
+        mix-blend-mode: soft-light;
+        opacity: 0.35;
+        animation: gridMove 20s linear infinite;
+    }
+
+    @@keyframes gridMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(220px, 220px); }
+    }
+
+    .catalog-shell {
+        position: relative;
+        z-index: 1;
+        color: #f8fafc;
+    }
+
+    .game-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .game-id-badge {
+        font-size: 0.75rem;
+        color: rgba(248, 250, 252, 0.5);
+        font-weight: 600;
+        letter-spacing: 0.1em;
+    }
+
+    .game-card-content {
+        flex: 1;
+    }
+
+    .game-title {
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        line-height: 1.3;
+        background: linear-gradient(135deg, #f8fafc, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .game-info-row {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: rgba(139, 92, 246, 0.3);
+        transform: translateX(4px);
+    }
+
+    .info-item i {
+        font-size: 1.25rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: rgba(139, 92, 246, 0.15);
+    }
+
+    .info-item .info-label {
+        display: block;
+        font-size: 0.75rem;
+        color: rgba(248, 250, 252, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-item .info-value {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .game-meta {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        background: rgba(248, 250, 252, 0.05);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        color: rgba(248, 250, 252, 0.7);
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .game-card-footer {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-edit {
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        color: #a5b4fc;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background: rgba(139, 92, 246, 0.3);
+        border-color: rgba(139, 92, 246, 0.5);
+        color: #c7d2fe;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        transition: all 0.3s ease;
+    }
+
+    .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #fee2e2;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
     /* Stats Card Colors */
     .stats-card-1 {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -265,15 +496,6 @@
     .stats-card-4 {
         background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         border: none;
-    }
-
-    /* Genre Badge Color */
-    .genre-badge {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
     }
 
     /* Optional: Add hover effects for stats cards */

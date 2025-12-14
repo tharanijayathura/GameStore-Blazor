@@ -4,6 +4,7 @@ using GameStore.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStore.Backend.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    partial class GameStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214062423_UpdateModelChanges")]
+    partial class UpdateModelChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,32 +64,32 @@ namespace GameStore.Backend.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 14, 6, 49, 33, 8, DateTimeKind.Utc).AddTicks(1622),
+                            CreatedAt = new DateTime(2025, 12, 14, 6, 24, 22, 282, DateTimeKind.Utc).AddTicks(2324),
                             GenreId = 1,
                             Name = "Street Fighter II",
                             Price = 19.99m,
                             ReleaseDate = new DateOnly(2017, 3, 3),
-                            UpdatedAt = new DateTime(2025, 12, 14, 6, 49, 33, 8, DateTimeKind.Utc).AddTicks(1818)
+                            UpdatedAt = new DateTime(2025, 12, 14, 6, 24, 22, 282, DateTimeKind.Utc).AddTicks(2516)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 12, 14, 6, 49, 33, 8, DateTimeKind.Utc).AddTicks(1999),
+                            CreatedAt = new DateTime(2025, 12, 14, 6, 24, 22, 282, DateTimeKind.Utc).AddTicks(2734),
                             GenreId = 6,
                             Name = "The Zelda",
                             Price = 29.99m,
                             ReleaseDate = new DateOnly(1998, 11, 21),
-                            UpdatedAt = new DateTime(2025, 12, 14, 6, 49, 33, 8, DateTimeKind.Utc).AddTicks(1999)
+                            UpdatedAt = new DateTime(2025, 12, 14, 6, 24, 22, 282, DateTimeKind.Utc).AddTicks(2734)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 12, 14, 6, 49, 33, 8, DateTimeKind.Utc).AddTicks(2003),
+                            CreatedAt = new DateTime(2025, 12, 14, 6, 24, 22, 282, DateTimeKind.Utc).AddTicks(2737),
                             GenreId = 7,
                             Name = "Minecraft",
                             Price = 26.95m,
                             ReleaseDate = new DateOnly(2011, 11, 18),
-                            UpdatedAt = new DateTime(2025, 12, 14, 6, 49, 33, 8, DateTimeKind.Utc).AddTicks(2004)
+                            UpdatedAt = new DateTime(2025, 12, 14, 6, 24, 22, 282, DateTimeKind.Utc).AddTicks(2737)
                         });
                 });
 

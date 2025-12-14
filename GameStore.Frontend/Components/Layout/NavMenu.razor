@@ -1,23 +1,29 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg" data-bs-theme="dark">
-    <div class="container-fluid">
+﻿<nav class="navbar navbar-expand-lg navbar-dark shadow-lg modern-navbar" data-bs-theme="dark">
+    <div class="container-fluid px-4">
         <a class="navbar-brand d-flex align-items-center fw-bold fs-3" href="/">
-            <div class="game-icon bg-primary bg-opacity-25 rounded p-2 me-3">
-                <i class="bi bi-controller text-primary"></i>
+            <div class="logo-mark me-3">
+                <i class="bi bi-controller"></i>
             </div>
-            <span>Game<span class="text-primary">Store</span></span>
+            <span class="brand-text">
+                Game<span class="text-primary">Store</span>
+            </span>
         </a>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto align-items-center gap-2">
+                <a class="nav-link d-flex align-items-center fw-semibold" href="/">
+                    <i class="bi bi-house-door me-2"></i>
+                    <span>Home</span>
+                </a>
                 <a class="nav-link d-flex align-items-center fw-semibold" href="/catalog">
                     <i class="bi bi-grid-3x3-gap me-2"></i>
-                    <span>Game Catalog</span>
+                    <span>Catalog</span>
                 </a>
-                <a class="nav-link d-flex align-items-center fw-semibold" href="/editgame">
+                <a class="nav-link btn-add-game d-flex align-items-center fw-semibold" href="/editgame">
                     <i class="bi bi-plus-circle me-2"></i>
                     <span>Add Game</span>
                 </a>
@@ -27,28 +33,111 @@
 </nav>
 
 <style>
-    .navbar {
-        backdrop-filter: blur(10px);
-        background: rgba(33, 37, 41, 0.95) !important;
+    .modern-navbar {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        background: rgba(15, 23, 42, 0.95) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .logo-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #a5b4fc;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    
+    .navbar-brand:hover .logo-mark {
+        transform: scale(1.1) rotate(5deg);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5));
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+    
+    .brand-text {
+        background: linear-gradient(135deg, #f8fafc, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     .nav-link {
-        border-radius: 0.5rem;
+        border-radius: 0.75rem;
         margin: 0 0.25rem;
-        padding: 0.75rem 1rem !important;
+        padding: 0.75rem 1.25rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: rgba(248, 250, 252, 0.8) !important;
+        position: relative;
+    }
+    
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--primary-gradient);
         transition: all 0.3s ease;
+        transform: translateX(-50%);
     }
     
     .nav-link:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(139, 92, 246, 0.15);
         transform: translateY(-2px);
+        color: #f8fafc !important;
     }
     
-    .navbar-brand {
-        transition: all 0.3s ease;
+    .nav-link:hover::before {
+        width: 80%;
     }
     
-    .navbar-brand:hover {
-        transform: scale(1.05);
+    .btn-add-game {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-add-game:hover {
+        background: var(--secondary-gradient) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+    }
+    
+    .btn-add-game::before {
+        display: none;
+    }
+    
+    .navbar-toggler {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+    }
+    
+    @@media (max-width: 991px) {
+        .navbar-nav {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link {
+            margin: 0.25rem 0;
+        }
     }
 </style>
